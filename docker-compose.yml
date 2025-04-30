@@ -1,7 +1,9 @@
 version: '3.9'
+
 services:
   backend:
     build: ./backend
+    container_name: awslegal-backend
     ports:
       - "5000:5000"
     env_file:
@@ -11,16 +13,18 @@ services:
 
   frontend:
     build: ./client
+    container_name: awslegal-frontend
     ports:
       - "3000:3000"
 
   postgres:
     image: postgres:14
+    container_name: awslegal-db
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: awslegal
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypassword
     ports:
       - "5432:5432"
     volumes:
