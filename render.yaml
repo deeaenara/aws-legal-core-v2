@@ -4,8 +4,6 @@ services:
     env: docker
     repo: https://github.com/YOUR_USERNAME/aws-legal-core-v2
     dockerfilePath: backend/Dockerfile
-    buildCommand: npm install
-    startCommand: node server.js
     envVars:
       - key: PORT
         value: 5000
@@ -29,9 +27,6 @@ services:
     env: docker
     repo: https://github.com/YOUR_USERNAME/aws-legal-core-v2
     dockerfilePath: client/Dockerfile
-    buildCommand: npm install && npm run build
-    startCommand: serve -s dist
-    envVars: []
 
   - type: cron
     name: daily-pl-report
@@ -39,7 +34,6 @@ services:
     repo: https://github.com/YOUR_USERNAME/aws-legal-core-v2
     dockerfilePath: backend/Dockerfile
     schedule: "0 23 * * *"
-    startCommand: node jobs/dailyPLReport.js
     envVars:
       - key: DB_URL
         fromDatabase:
