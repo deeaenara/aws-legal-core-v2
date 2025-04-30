@@ -1,0 +1,56 @@
+services:
+  - type: web
+    name: aws-legal-backend
+    env: docker
+    repo: https://github.com/deeaenara/aws-legal-core-v2
+    dockerfilePath: backend/Dockerfile
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: JWT_SECRET
+        value: aws2025
+      - key: DB_URL
+        fromDatabase:
+          name: aws-legal-db
+          property: connectionString
+      - key: EMAIL_USER
+        value: aws@aws-legalgroup.com
+      - key: EMAIL_PASS
+        value: aws2025
+      - key: ONESIGNAL_KEY
+        value:  aws2025
+      - key: CALLMEBOT_KEY
+        value: aws2025
+
+  - type: web
+    name: aws-legal-frontend
+    env: docker
+    repo: https://github.com/deeaenara/aws-legal-core-v2
+    dockerfilePath: client/Dockerfile
+    buildCommand: npm install && npm run build
+    startCommand: serve -s dist
+    envVars: []
+
+  - type: cron
+    name: daily-pl-report
+    env: docker
+    repo: https://github.com/deeaenara/aws-legal-core-v2
+    dockerfilePath: backend/Dockerfile
+    schedule: "0 23 * * *"
+    startCommand: node jobs/dailyPLReport.js
+    envVars:
+      - key: DB_URL
+        fromDatabase:
+          name: aws-legal-db
+          property: connectionString
+      - key: EMAIL_USER
+        value: aws@aws-legalgroup.com
+      - key: EMAIL_PASS
+        value: aws2025
+
+databases:
+  - name: aws-legal-db
+    databaseName: awslegal
+    user: postgres
